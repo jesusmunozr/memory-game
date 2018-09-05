@@ -17,6 +17,7 @@ let cards = [
     'watch_later'];
 let firtsSelectedCardIndex = -1;
 let secondSelectedCardIndex = -1;
+let movements = 0;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -47,6 +48,10 @@ function selectCard(event) {
         firtsSelectedCardIndex = getSelectedCardIndex(selectedCard);
     } else {
         secondSelectedCardIndex = getSelectedCardIndex(selectedCard);
+        // Increment movements
+        movements++;
+
+        //Check if selected cards match
         checkMatch();
     }
 }
