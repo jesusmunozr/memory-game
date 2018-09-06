@@ -1,20 +1,20 @@
 let cards = [
-    'android',
-    'face',
-    'account_circle',
-    'watch_later',
-    'fingerprint',
-    'favorite',
-    'loyalty',
-    'thumb_up',
-    'face',
-    'fingerprint',
-    'android',
-    'loyalty',
-    'favorite',
-    'thumb_up',
-    'account_circle',
-    'watch_later'];
+    {'icon': 'android', 'matched': false},
+    {'icon': 'face', 'matched': false},
+    {'icon': 'account_circle', 'matched': false},
+    {'icon': 'watch_later', 'matched': false},
+    {'icon': 'fingerprint', 'matched': false},
+    {'icon': 'favorite', 'matched': false},
+    {'icon': 'loyalty', 'matched': false},
+    {'icon': 'thumb_up', 'matched': false},
+    {'icon': 'face', 'matched': false},
+    {'icon': 'fingerprint', 'matched': false},
+    {'icon': 'android', 'matched': false},
+    {'icon': 'loyalty', 'matched': false},
+    {'icon': 'favorite', 'matched': false},
+    {'icon': 'thumb_up', 'matched': false},
+    {'icon': 'account_circle', 'matched': false},
+    {'icon': 'watch_later', 'matched': false}];
 let firtsSelectedCardIndex = -1;
 let secondSelectedCardIndex = -1;
 let movements = 0;
@@ -34,15 +34,29 @@ function shuffle(array) {
     return array;
 }
 
-function loadCards(array) {
-    const icons = document.querySelector('.board').querySelectorAll('.material-icons');
-    for(let i = 0; i < icons.length; i++) {
-        icons[i].textContent = array[i];
+function loadCards() {
+    const divs = document.querySelector('.board').querySelectorAll('.card');
+    for(let i = 0; i < divs.length; i++) {
+        divs[i].querySelector('.material-icons').textContent = cards[i].icon;
     }
 }
 
 function selectCard(event) {
     const selectedCard = event.target;
+
+    // IF already exists two selected cards create a new movement
+    if (firtsSelectedCardIndex !== -1 && secondSelectedCardIndex !== -1) {
+        if (cards[firtsSelectedCardIndex].matched === false) {
+            // TODO: flip the card to the front face
+        }
+
+        if(cards[secondSelectedCardIndex].matched === false) {
+            // TODO: flip the card to the front face
+        }
+
+        firtsSelectedCardIndex = -1;
+        secondSelectedCardIndex = -1;
+    } 
 
     if (firtsSelectedCardIndex === -1) {
         firtsSelectedCardIndex = getSelectedCardIndex(selectedCard);
@@ -50,16 +64,22 @@ function selectCard(event) {
         secondSelectedCardIndex = getSelectedCardIndex(selectedCard);
         // Increment movements
         movements++;
-
+        setScore();
         //Check if selected cards match
         checkMatch();
     }
 }
 
+function setScore() {
+    document.querySelector('.move-counter').textContent = movements;
+}
+
 function checkMatch() {
-    if (cards[firtsSelectedCardIndex] === cards[secondSelectedCardIndex]) {
-        document.querySelector('.board').querySelectorAll('.card')[firtsSelectedCardIndex].classList.add('matched')
+    if (cards[firtsSelectedCardIndex].icon === cards[secondSelectedCardIndex].icon) {
+        document.querySelector('.board').querySelectorAll('.card')[firtsSelectedCardIndex].classList.add('matched');
+        cards[firtsSelectedCardIndex].matched = true;
         document.querySelector('.board').querySelectorAll('.card')[secondSelectedCardIndex].classList.add('matched')
+        cards[secondSelectedCardIndex].matched = true;
     } 
 
     firtsSelectedCardIndex = -1;
@@ -79,5 +99,5 @@ function getSelectedCardIndex(targetCard) {
 }
 
 cards = shuffle(cards);
-loadCards(cards);
+loadCards();
 console.log(cards);
