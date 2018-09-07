@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <title>Memory Game</title>
 </head>
 <body>
@@ -13,12 +14,20 @@
     </header>
     <section class="content">
         <div class="score">
-            <span>Stars here</span>
+            <div class="crop" title="Jesus">
+                <div style="width: 136px">
+                    <span class="material-icons">star</span>
+                    <span class="material-icons">star</span>
+                    <span class="material-icons">star</span>
+                    <span class="material-icons">star</span>
+                    <span class="material-icons">star</span>
+                </div>
+            </div>
             <span class="move-counter"></span>
         </div>
         <div class="timer">
-            <span>Timer</span>
-            <button>Restart</button>
+            <span class="clock">00:00:00</span>
+            <button onclick="restart()">Restart</button>
         </div>
         <div class="board" onclick="selectCard(event)">
             <div class="card">

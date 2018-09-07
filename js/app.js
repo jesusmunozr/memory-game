@@ -18,6 +18,12 @@ let cards = [
 let firtsSelectedCardIndex = -1;
 let secondSelectedCardIndex = -1;
 let movements = 0;
+let gameFinished = false;
+let gameStarted = false;
+let hours = 0;
+let minutes = 0;
+let seconds = 0;
+let timeControl = undefined;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -42,7 +48,20 @@ function loadCards() {
 }
 
 function selectCard(event) {
-    const selectedCard = event.target;
+    const selectedCardIndex = getSelectedCardIndex(event.target);
+
+    if (gameFinished) {
+        return;
+    }
+
+    if (firtsSelectedCardIndex === selectedCardIndex || secondSelectedCardIndex === selectedCardIndex) {
+        return;
+    }
+
+    if (gameStarted === false) {
+        timeControl = setInterval(timer, 1000);
+        gameStarted = true;
+    }
 
     // IF already exists two selected cards create a new movement
     if (firtsSelectedCardIndex !== -1 && secondSelectedCardIndex !== -1) {
@@ -59,9 +78,9 @@ function selectCard(event) {
     } 
 
     if (firtsSelectedCardIndex === -1) {
-        firtsSelectedCardIndex = getSelectedCardIndex(selectedCard);
-    } else {
-        secondSelectedCardIndex = getSelectedCardIndex(selectedCard);
+        firtsSelectedCardIndex = selectedCardIndex;
+    } else if (secondSelectedCardIndex === -1) {
+        secondSelectedCardIndex = selectedCardIndex;
         // Increment movements
         movements++;
         setScore();
@@ -71,7 +90,26 @@ function selectCard(event) {
 }
 
 function setScore() {
+    // Display movements
     document.querySelector('.move-counter').textContent = movements;
+
+    // Set score according movements
+    let score = 5;
+    if (movements <= 12) {
+        score = 5;
+    } else if (movements >= 24) {
+        score = 0;
+    } else {
+        score = -0.42 * movements + 10;
+    }
+
+    // Set the style and title for stars
+    const stars = document.querySelector('.crop')
+    stars.style.width = `${score * 136 / 5}px`;
+    stars.setAttribute('title', `Your score is ${score.toFixed(2)}`);
+
+    console.log('SCORE: ' + score);
+    
 }
 
 function checkMatch() {
@@ -80,10 +118,25 @@ function checkMatch() {
         cards[firtsSelectedCardIndex].matched = true;
         document.querySelector('.board').querySelectorAll('.card')[secondSelectedCardIndex].classList.add('matched')
         cards[secondSelectedCardIndex].matched = true;
-    } 
+    }
 
-    firtsSelectedCardIndex = -1;
-    secondSelectedCardIndex = -1;
+    // Check if the game already finish
+    evaluateMatches();
+}
+
+// Evaluate if the game has already finished
+function evaluateMatches() {
+    let matchesCounter = 0;
+    cards.forEach(c => {
+        if (c.matched) {
+            matchesCounter++;
+        }
+    });
+
+    if (matchesCounter === cards.length) {
+        gameFinished = true;
+        console.log('GAME FINISH!!!');
+    }
 }
 
 function getSelectedCardIndex(targetCard) {
@@ -94,10 +147,64 @@ function getSelectedCardIndex(targetCard) {
         currentIndex = Array.from(document.querySelector('.board').querySelectorAll('.material-icons')).indexOf(targetCard);
     }
 
-    console.log(currentIndex);
     return currentIndex;
 }
 
-cards = shuffle(cards);
-loadCards();
-console.log(cards);
+
+
+function timer() {
+    if (seconds < 59) {
+        seconds++;
+    } else if (minutes < 60) {
+        seconds = 0;
+        minutes++;
+    } else {
+        minutes = 0;
+        hours++;
+    }
+
+    document.querySelector('.clock').textContent = `${fillWithZero(hours)}:${fillWithZero(minutes)}:${fillWithZero(seconds)}`;
+
+    function fillWithZero(num) {
+        if(num < 10) {
+            num = `0${num}`;
+        }
+        return num;
+    }
+}
+
+function clearTimer() {
+    clearInterval(timeControl);
+    document.querySelector('.clock').textContent = '00:00:00';
+}
+
+function clearVariables() {
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    firtsSelectedCardIndex = -1;
+    secondSelectedCardIndex = -1;
+    movements = 0;
+    gameFinished = false;
+    gameStarted = false;
+}
+
+function restart() {
+    clearVariables();
+    clearTimer();
+    // Unmark matched cards
+    cards.forEach(c => c.matched = false);
+    
+    setupApplication();
+}
+
+// Configure application according variables values
+function setupApplication() {
+    // Set the score with cleared variables
+    setScore();
+    cards = shuffle(cards);
+    // Load cards in the DOM
+    loadCards();
+}
+
+setupApplication();
