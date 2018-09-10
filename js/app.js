@@ -41,7 +41,7 @@ function shuffle(array) {
 }
 
 function loadCards() {
-    const divs = document.querySelector('.board').querySelectorAll('.card');
+    const divs = document.querySelector('.board-content').querySelectorAll('.card');
     for(let i = 0; i < divs.length; i++) {
         divs[i].querySelector('.material-icons').textContent = cards[i].icon;
     }
@@ -66,11 +66,11 @@ function selectCard(event) {
     // IF already exists two selected cards create a new movement
     if (firtsSelectedCardIndex !== -1 && secondSelectedCardIndex !== -1) {
         if (cards[firtsSelectedCardIndex].matched === false) {
-            // TODO: flip the card to the front face
+            document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(0deg)';
         }
 
         if(cards[secondSelectedCardIndex].matched === false) {
-            // TODO: flip the card to the front face
+            document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(0deg)';
         }
 
         firtsSelectedCardIndex = -1;
@@ -79,8 +79,10 @@ function selectCard(event) {
 
     if (firtsSelectedCardIndex === -1) {
         firtsSelectedCardIndex = selectedCardIndex;
+        document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(180deg)';
     } else if (secondSelectedCardIndex === -1) {
         secondSelectedCardIndex = selectedCardIndex;
+        document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(180deg)';
         // Increment movements
         movements++;
         setScore();
@@ -91,7 +93,7 @@ function selectCard(event) {
 
 function setScore() {
     // Display movements
-    document.querySelector('.move-counter').textContent = movements;
+    document.querySelector('.score-content__movements').textContent = `Movements: ${movements}`;
 
     // Set score according movements
     let score = 5;
@@ -104,7 +106,7 @@ function setScore() {
     }
 
     // Set the style and title for stars
-    const stars = document.querySelector('.crop')
+    const stars = document.querySelector('.score-content__crop')
     stars.style.width = `${score * 136 / 5}px`;
     stars.setAttribute('title', `Your score is ${score.toFixed(2)}`);
 
@@ -114,9 +116,9 @@ function setScore() {
 
 function checkMatch() {
     if (cards[firtsSelectedCardIndex].icon === cards[secondSelectedCardIndex].icon) {
-        document.querySelector('.board').querySelectorAll('.card')[firtsSelectedCardIndex].classList.add('matched');
+        document.querySelector('.board-content').querySelectorAll('.back')[firtsSelectedCardIndex].classList.add('matched');
         cards[firtsSelectedCardIndex].matched = true;
-        document.querySelector('.board').querySelectorAll('.card')[secondSelectedCardIndex].classList.add('matched')
+        document.querySelector('.board-content').querySelectorAll('.back')[secondSelectedCardIndex].classList.add('matched')
         cards[secondSelectedCardIndex].matched = true;
     }
 
@@ -135,22 +137,14 @@ function evaluateMatches() {
 
     if (matchesCounter === cards.length) {
         gameFinished = true;
+        clearInterval(timeControl);
         console.log('GAME FINISH!!!');
     }
 }
 
 function getSelectedCardIndex(targetCard) {
-    let currentIndex = -1;
-    if (targetCard.tagName === 'LI') {
-        currentIndex = Array.from(document.querySelector('.board').querySelectorAll('li')).indexOf(targetCard);
-    } else {
-        currentIndex = Array.from(document.querySelector('.board').querySelectorAll('.material-icons')).indexOf(targetCard);
-    }
-
-    return currentIndex;
+    return Array.from(document.querySelector('.board-content').querySelectorAll(`.${targetCard.classList[0]}`)).indexOf(targetCard);
 }
-
-
 
 function timer() {
     if (seconds < 59) {
@@ -163,7 +157,7 @@ function timer() {
         hours++;
     }
 
-    document.querySelector('.clock').textContent = `${fillWithZero(hours)}:${fillWithZero(minutes)}:${fillWithZero(seconds)}`;
+    document.querySelector('.score-content__clock').textContent = `${fillWithZero(hours)}:${fillWithZero(minutes)}:${fillWithZero(seconds)}`;
 
     function fillWithZero(num) {
         if(num < 10) {

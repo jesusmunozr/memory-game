@@ -1,3 +1,141 @@
-.crop {
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
+header h1 {
+    margin: 10px auto;
+}
+
+.score-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+
+.score-content__movements {
+    width: 45%;
+    display: block;
+    margin: auto;
+}
+
+.score-content__crop {
     overflow: hidden;
+    width: 45%;
+    margin: 5px auto;
+}
+
+.score-content__clock {
+    width: 45%;
+    display: block;
+    margin: auto;
+}
+
+.score-content__restart {
+    width: 45%;
+    display: block;
+    margin: auto;
+}
+
+.board-content {
+    margin: 10px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: all 1.0s linear;
+}
+
+.card-container {
+    width: 19%;
+    height: 68px;
+    margin: inherit;
+    position: relative;
+    z-index: 1;
+    perspective: 1000px;
+}
+
+.face {
+    width: 100%;
+    height: 100%;
+}
+.front {
+    position: absolute;
+    backface-visibility: hidden;
+    background-color: green;
+}
+
+.back {
+    display: block;
+    transform: rotateY(180deg);
+    box-sizing: border-box;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    background-color: #aaa;
+}
+
+.matched {
+    background-color: green;
+}
+
+.congrats {
+    z-index: 9999;
+    background: rgba(195,195,195,0.9);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+    vertical-align: 1.1rem;
+    display: flex;
+    flex-flow: column;
+}
+
+.congrats .congrats__content {
+    background: #fff;
+    border-radius: 5px;
+    width: 80%;
+    margin: auto;
+    border: 1px solid #656565;
+    box-shadow: 4px 4px rgba(101,101,101,0.3);
+    padding: 20px;
+}
+
+.congrats__content span {
+    display: block;
+}
+
+.congrats__content button {
+    margin-top: 20px;
 }
