@@ -14,8 +14,9 @@ html, body {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     text-align: center;
+    background-color: #f6f4f8;
 }
 
 .container {
@@ -24,6 +25,7 @@ body {
     justify-content: center;
     align-items: center;
     position: absolute;
+    width: 100%;
 }
 
 header h1 {
@@ -54,12 +56,28 @@ header h1 {
     width: 45%;
     display: block;
     margin: auto;
+    font-size: 27px;
 }
 
 .score-content__restart {
-    width: 45%;
+    width: 136px;
     display: block;
     margin: auto;
+    background-color: #031654;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.score-content__restart-icon {
+    float: left;
+    margin-left: 20%;
+}
+
+.score-content__restart-text {
+    float: left;
+    line-height: 2;
 }
 
 .board-content {
@@ -68,18 +86,19 @@ header h1 {
     flex-wrap: wrap;
     justify-content: center;
     perspective: 1000px;
+    background-color: #22066b;
+    border-radius: 4px;
 }
 
 .card {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    /* transition: all 0.5s linear; */
 }
 
 .card-container {
-    width: 15vw;
-    height: 15vh;
+    width: 4rem;
+    height: 5.3rem;
     margin: inherit;
     position: relative;
     z-index: 1;
@@ -109,12 +128,16 @@ header h1 {
     transform: rotateY(180deg);
     padding: 10px;
     color: white;
-    background-color: #2d527c;
-    line-height: 5;
+    background-color: #257fe4;
+}
+
+.back i {
+    font-size: 32px;
+    line-height: 2;
 }
 
 .matched {
-    background-color: green;
+    background-color: #09f38f;
 }
 
 .congrats {
@@ -133,6 +156,7 @@ header h1 {
     background: #fff;
     border-radius: 5px;
     width: 80%;
+    max-width: 600px;
     margin: auto;
     border: 1px solid #656565;
     box-shadow: 4px 4px rgba(101,101,101,0.3);
@@ -156,6 +180,49 @@ header h1 {
     transition: all 0.5s linear;
 }
 
+@media screen and (min-width: 440px) {
+    .card-container {
+        width: 5.3rem;
+        height: 9.3rem;
+    }
+
+    .back i {
+        font-size: 60px;
+    }
+}
+
+@media screen and (min-width: 544px) {
+    .card-container {
+        width: 6.3rem;
+        height: 9.3rem;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    header {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .score-content {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .board-content {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .card-container {
+        width: 8.3rem;
+        height: 9.3rem;
+    }
+
+    .back i {
+        font-size: 70px;
+    }
+}
 @keyframes card-matched {
     0% {transform: scale(1);}
     50% {transform: scale(1.3);}

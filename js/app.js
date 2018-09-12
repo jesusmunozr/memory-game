@@ -145,7 +145,7 @@ function setScore() {
 
     // Set the style and title for stars
     const stars = document.querySelector('.score-content__crop')
-    stars.style.width = `${score * 136 / 5}px`;
+    stars.style.width = `${score * 138 / 5}px`;
     stars.setAttribute('title', `Your score is ${score.toFixed(2)}`);
 }
 
@@ -186,7 +186,13 @@ function setGameFinished() {
 
     const congratsContent = document.createElement('div');
     congratsContent.className = 'congrats__content';
-    congratsContent.innerHTML = `<span>Congratulations!!</span><span>this was your time</span><span>${timer()}</span><button onclick='restart()'>Restart</button>`;
+    congratsContent.innerHTML = `<h2>Congratulations!!</h2>
+    <span>This is your time</span>
+    <span class="score-content__clock">${timer()}</span>
+    <button class="score-content__restart" onclick="restart()">
+    <div class="score-content__restart-icon"><i class="material-icons">autorenew</i></div>
+    <div class="score-content__restart-text"><span>Restart</span></div>
+    </button>`;
 
     congrats.appendChild(congratsContent);
 

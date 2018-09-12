@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <title>Memory Game</title>
 </head>
@@ -17,7 +17,7 @@
         <section class="score-content">
             <span class="score-content__movements">Movements: 0</span>
             <div class="score-content__crop">
-                <div style="width: 136px">
+                <div style="width: 138px">
                     <span class="material-icons">star</span>
                     <span class="material-icons">star</span>
                     <span class="material-icons">star</span>
@@ -26,19 +26,18 @@
                 </div>
             </div>
             <span class="score-content__clock">00:00:00</span>
-            <button class="score-content__restart" onclick="restart()">Restart</button>
+            <button class="score-content__restart" onclick="restart()">
+                <div class="score-content__restart-icon">
+                    <i class="material-icons">autorenew</i>
+                </div>
+                <div class="score-content__restart-text">
+                    <span>Restart</span>
+                </div>
+            </button>
         </section>
         <section class="board-content" onclick="selectCard(event)">
         </section>
     </div>
-    <!-- <div class="congrats">
-        <div class="congrats__content">
-            <span>Congratulations!!</span>
-            <span>this was your time</span>
-            <span>00:00:00</span>
-            <button>Restart</button>
-        </div>
-    </div> -->
     <script src="js/app.js"></script>
 </body>
 </html>
