@@ -41,36 +41,72 @@ function shuffle(array) {
 }
 
 function loadCards() {
-    const divs = document.querySelector('.board-content').querySelectorAll('.card');
-    for(let i = 0; i < divs.length; i++) {
-        divs[i].querySelector('.material-icons').textContent = cards[i].icon;
+    // clear board content
+    document.querySelector('.board-content').innerHTML = '';
+
+    const fragment = document.createDocumentFragment();
+
+    for(let i = 0; i < cards.length; i++) { 
+        // Create card Icon
+        const cardIcon = document.createElement('i');
+        cardIcon.className = 'material-icons';
+        cardIcon.innerText = cards[i].icon;
+
+        // Create card back face
+        const cardBackFace = document.createElement('div');
+        cardBackFace.className = 'back face';
+        
+        // create card front face
+        const cardFrontFace = document.createElement('div');
+        cardFrontFace.className = 'front face';
+
+        // create card body
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card';
+
+        //create card container
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+
+        // jain all card components in card container
+        cardBackFace.appendChild(cardIcon);
+        cardBody.appendChild(cardFrontFace);
+        cardBody.appendChild(cardBackFace);
+        cardContainer.appendChild(cardBody);
+
+        // add card container to the fragment
+        fragment.appendChild(cardContainer);
     }
+
+    // add fragment to the board section
+    document.querySelector('.board-content').appendChild(fragment);
 }
 
 function selectCard(event) {
     const selectedCardIndex = getSelectedCardIndex(event.target);
 
-    if (gameFinished) {
-        return;
-    }
-
-    if (firtsSelectedCardIndex === selectedCardIndex || secondSelectedCardIndex === selectedCardIndex) {
+    if (gameFinished || selectedCardIndex === -1 || cards[selectedCardIndex].matched === true || firtsSelectedCardIndex === selectedCardIndex || secondSelectedCardIndex === selectedCardIndex) {
         return;
     }
 
     if (gameStarted === false) {
-        timeControl = setInterval(timer, 1000);
+        timeControl = setInterval(() => {
+            const time = timer();
+            document.querySelector('.score-content__clock').textContent = time;
+        }, 1000);
         gameStarted = true;
     }
 
-    // IF already exists two selected cards create a new movement
+    // IF already exists two selected cards and select a new one, flip selected cards and create a new movement
     if (firtsSelectedCardIndex !== -1 && secondSelectedCardIndex !== -1) {
         if (cards[firtsSelectedCardIndex].matched === false) {
-            document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(0deg)';
+            document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').classList.remove('rotate-card-on');
+            document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').classList.add('rotate-card-off');
         }
 
         if(cards[secondSelectedCardIndex].matched === false) {
-            document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(0deg)';
+            document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').classList.remove('rotate-card-on');
+            document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').classList.add('rotate-card-off');
         }
 
         firtsSelectedCardIndex = -1;
@@ -79,10 +115,12 @@ function selectCard(event) {
 
     if (firtsSelectedCardIndex === -1) {
         firtsSelectedCardIndex = selectedCardIndex;
-        document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(180deg)';
+        document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').classList.remove('rotate-card-off');
+        document.querySelectorAll('.card-container')[firtsSelectedCardIndex].querySelector('.card').classList.add('rotate-card-on');
     } else if (secondSelectedCardIndex === -1) {
         secondSelectedCardIndex = selectedCardIndex;
-        document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').style.transform = 'rotateY(180deg)';
+        document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').classList.remove('rotate-card-off');
+        document.querySelectorAll('.card-container')[secondSelectedCardIndex].querySelector('.card').classList.add('rotate-card-on');
         // Increment movements
         movements++;
         setScore();
@@ -109,9 +147,6 @@ function setScore() {
     const stars = document.querySelector('.score-content__crop')
     stars.style.width = `${score * 136 / 5}px`;
     stars.setAttribute('title', `Your score is ${score.toFixed(2)}`);
-
-    console.log('SCORE: ' + score);
-    
 }
 
 function checkMatch() {
@@ -136,10 +171,28 @@ function evaluateMatches() {
     });
 
     if (matchesCounter === cards.length) {
-        gameFinished = true;
-        clearInterval(timeControl);
-        console.log('GAME FINISH!!!');
+        setGameFinished();
     }
+}
+
+function setGameFinished() {
+    gameFinished = true;
+    clearInterval(timeControl);
+
+    const popup = document.createDocumentFragment();
+
+    const congrats = document.createElement('div');
+    congrats.className = 'congrats';
+
+    const congratsContent = document.createElement('div');
+    congratsContent.className = 'congrats__content';
+    congratsContent.innerHTML = `<span>Congratulations!!</span><span>this was your time</span><span>${timer()}</span><button onclick='restart()'>Restart</button>`;
+
+    congrats.appendChild(congratsContent);
+
+    popup.appendChild(congrats);
+
+    document.body.appendChild(popup);
 }
 
 function getSelectedCardIndex(targetCard) {
@@ -157,7 +210,7 @@ function timer() {
         hours++;
     }
 
-    document.querySelector('.score-content__clock').textContent = `${fillWithZero(hours)}:${fillWithZero(minutes)}:${fillWithZero(seconds)}`;
+    return `${fillWithZero(hours)}:${fillWithZero(minutes)}:${fillWithZero(seconds)}`;
 
     function fillWithZero(num) {
         if(num < 10) {
@@ -169,7 +222,7 @@ function timer() {
 
 function clearTimer() {
     clearInterval(timeControl);
-    document.querySelector('.clock').textContent = '00:00:00';
+    document.querySelector('.score-content__clock').textContent = '00:00:00';
 }
 
 function clearVariables() {
@@ -186,10 +239,17 @@ function clearVariables() {
 function restart() {
     clearVariables();
     clearTimer();
+
     // Unmark matched cards
     cards.forEach(c => c.matched = false);
     
     setupApplication();
+
+    const popup = document.querySelector('.congrats');
+    if(popup !== null)
+    {
+        popup.remove();
+    }
 }
 
 // Configure application according variables values
